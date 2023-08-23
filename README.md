@@ -1,4 +1,5 @@
 # Denoising Diffusion Probabilistic Model for Retinal Image Generation and Segmentation
+## Dataset will be available after the paper is published.
 
 1. Create anaconda environment using the following code: "conda env create -f env.yml".
 
