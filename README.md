@@ -24,6 +24,4 @@ If you use this code, please use the following BibTeX entry.
   journal={arXiv preprint arXiv:2308.08339},
   year={2023}
 }
-
-
 ```
