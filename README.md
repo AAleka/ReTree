@@ -4,9 +4,13 @@
 
 2. Download EyeQ, DRIVE, STARE, and CHASE DB1 datasets and place them in datasets folder.
 
-3. Run Train.py selecting the dataset.
+3. Segment EyeQ dataset with any segmentation model.
 
-4. Run Test.py selecting the dataset.
+4. Place EyeQ images in datasets/eyeq/images/.
+
+5. Run train_ddpm_mask.py and place generated masks in datasets/eyeq/labels/.
+
+6. Run train_ddpm_image.py.
 
 ![Screenshot](ddpms.jpg)
 
