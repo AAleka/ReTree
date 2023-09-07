@@ -1,5 +1,5 @@
 # Denoising Diffusion Probabilistic Model for Retinal Image Generation and Segmentation
-## Dataset will be available after the paper is published.
+## Dataset is available at the following [link](https://www.google.com).
 
 1. Create anaconda environment using the following code: "conda env create -f env.yml".
 
@@ -18,10 +18,12 @@
 If you use this code, please use the following BibTeX entry.
 
 ```
-@article{alimanov2023denoising,
+@inproceedings{alimanov2023denoising,
   title={Denoising Diffusion Probabilistic Model for Retinal Image Generation and Segmentation},
   author={Alimanov, Alnur and Islam, Md Baharul},
-  journal={arXiv preprint arXiv:2308.08339},
-  year={2023}
+  booktitle={2023 IEEE International Conference on Computational Photography (ICCP)},
+  pages={1--12},
+  year={2023},
+  organization={IEEE}
 }
 ```
