@@ -253,48 +253,26 @@ class DDPM(nn.Module):
         if self.img_channels == 4:
             x = torch.cat([x, mask], 1)
 
-        # print("Input")
-        # print("x", x.shape)
         x1 = self.initial(x)
-        # print("x1", x1.shape, "\n")
 
-        # print("Down")
         x2 = self.down_blocks[0](x1, t)
         x2 = self.transformer_blocks[0](x2)
-        # print("x2", x2.shape)
 
         x3 = self.down_blocks[1](x2, t)
         x3 = self.transformer_blocks[1](x3)
-        # print("x3", x3.shape, "\n")
 
-        # print("Bottleneck")
         x3 = self.bottleneck_blocks[0](x3)
         x3 = self.bottleneck_blocks[1](x3)
         x3 = self.bottleneck_blocks[2](x3)
-        # print("x4", x3.shape)
 
-        # mu, sigma = self.mu(x3).view(-1), self.sigma(x3).view(-1)
-        # print("Mu", mu.shape)
-        # print("Sigma", sigma.shape, "\n")
-
-        # print("Up")
         x = self.up_blocks[0](x3, None, t)
-        # print("x5", x.shape)
-
         x = self.up_blocks[1](x, x2, t)
-        # print("x6", x.shape)
-
         x = self.up_blocks[2](x, None, t)
-        # print("x7", x.shape)
-
         x = self.up_blocks[3](x, x1, t)
-        # print("x8", x.shape, "\n")
 
-        # print("Output")
         x = self.last(x)
-        # print("output", x.shape)
 
-        return x  # , mu, sigma
+        return x
 
 
 class ConvolutionBlockD(nn.Module):
@@ -344,98 +322,6 @@ class Discriminator(nn.Module):
         x = self.last(x)
 
         return torch.sigmoid(x)
-
-
-class SegmDDPM(nn.Module):
-    def __init__(self, time_dim=256, img_channels=4, dim=2*2048, depth=1, heads=4, dim_head=64,
-                 mlp_ratio=4, drop_rate=0.):
-        super(SegmDDPM, self).__init__()
-        self.img_channels = img_channels
-        self.dim = dim
-        self.time_dim = time_dim
-        emb_dim = time_dim
-        dims = (dim // 32, dim // 16, dim // 8, dim // 4, dim // 2, dim // 1)
-
-        self.initial = nn.Sequential(
-            nn.Conv2d(img_channels, dims[0], kernel_size=3, padding=1, bias=False),
-            nn.GroupNorm(1, dims[0]),
-            nn.GELU(),
-        )
-
-        self.down_blocks = nn.ModuleList()
-        self.up_blocks = nn.ModuleList()
-        self.transformer_blocks = nn.ModuleList()
-        self.bottleneck_blocks = nn.ModuleList()
-
-        self.down_blocks.append(Down(dims[0], dims[2], emb_dim))
-        self.down_blocks.append(Down(dims[2], dims[3], emb_dim))
-
-        self.transformer_blocks.append(Transformer(dims[2], depth, heads, dim_head, mlp_ratio, drop_rate))
-        self.transformer_blocks.append(Transformer(dims[3], depth, heads, dim_head, mlp_ratio, drop_rate))
-
-        self.bottleneck_blocks.append(DoubleConv(dims[3], dims[4]))
-        self.bottleneck_blocks.append(DoubleConv(dims[4], dims[4]))
-        self.bottleneck_blocks.append(DoubleConv(dims[4], dims[3]))
-
-        self.up_blocks.append(Up(dims[3], dims[2], emb_dim))
-        self.up_blocks.append(Up(dims[3], dims[1], emb_dim))
-        self.up_blocks.append(Up(dims[1], dims[0], emb_dim))
-        self.up_blocks.append(Up(dims[1], dims[0], emb_dim))
-
-        self.last = To_Image(dims[0], 1)
-
-    def pos_encoding(self, t, channels):
-        inv_freq = 1.0 / (10000 ** (torch.arange(0, channels, 2).float().to(torch.device("cuda")) / channels))
-        pos_enc_a = torch.sin(t.repeat(1, channels // 2) * inv_freq)
-        pos_enc_b = torch.cos(t.repeat(1, channels // 2) * inv_freq)
-        pos_enc = torch.cat([pos_enc_a, pos_enc_b], dim=-1)
-        return pos_enc
-
-    def forward(self, x, t, img):
-        t = t.unsqueeze(-1).type(torch.float)
-        t = self.pos_encoding(t, self.time_dim)
-
-        if self.img_channels == 4:
-            x = torch.cat([x, img], 1)
-
-        # print("Input")
-        # print("x", x.shape)
-        x1 = self.initial(x)
-        # print("x1", x1.shape, "\n")
-        #
-        # print("Down")
-        x2 = self.down_blocks[0](x1, t)
-        x2 = self.transformer_blocks[0](x2)
-        # print("x2", x2.shape)
-
-        x3 = self.down_blocks[1](x2, t)
-        x3 = self.transformer_blocks[1](x3)
-        # print("x3", x3.shape, "\n")
-
-        # print("Bottleneck")
-        x3 = self.bottleneck_blocks[0](x3)
-        x3 = self.bottleneck_blocks[1](x3)
-        x3 = self.bottleneck_blocks[2](x3)
-        # print("x4", x3.shape)
-
-        # print("Up")
-        x = self.up_blocks[0](x3, None, t)
-        # print("x5", x.shape)
-
-        x = self.up_blocks[1](x, x2, t)
-        # print("x6", x.shape)
-
-        x = self.up_blocks[2](x, None, t)
-        # print("x7", x.shape)
-
-        x = self.up_blocks[3](x, x1, t)
-        # print("x8", x.shape, "\n")
-
-        # print("Output")
-        x = self.last(x)
-        # print("output", x.shape)
-
-        return x  # , mu, sigma
 
 
 if __name__ == '__main__':
