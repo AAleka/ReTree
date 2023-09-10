@@ -1,5 +1,5 @@
 # Denoising Diffusion Probabilistic Model for Retinal Image Generation and Segmentation
-## Dataset is available at the following [link]([https://www.kaggle.com/datasets/alnuritoalimanov/retree-dataset]).
+## Dataset is available at the following [link](https://www.kaggle.com/datasets/alnuritoalimanov/retree-dataset).
 
 1. Create anaconda environment using the following code: "conda env create -f env.yml".
 
