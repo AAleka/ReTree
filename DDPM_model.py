@@ -334,10 +334,6 @@ if __name__ == '__main__':
     output = ddpm(tensor_x, tensor_t, tensor_m)
     print(output.shape)
 
-    segmddpm = SegmDDPM().to(torch.device("cuda"))
-    output = segmddpm(tensor_m, tensor_t, tensor_x)
-    print(output.shape)
-
     D1 = Discriminator().to(torch.device("cuda"))
     output = D1(tensor_x)
     print(output.shape)
