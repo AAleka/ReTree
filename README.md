@@ -1,6 +1,6 @@
 # Denoising Diffusion Probabilistic Model for Retinal Image Generation and Segmentation
 ## Dataset is available at the following [link](https://www.kaggle.com/datasets/alnuritoalimanov/retree-dataset).
-
+## The weights are availabel at the following [link](https://drive.google.com/drive/folders/1WSPo2yUUmy9o4rCB7h7lQkazcl77GHMf?usp=drive_link).
 1. Create anaconda environment using the following code: "conda env create -f env.yml".
 
 2. Download EyeQ, DRIVE, STARE, and CHASE DB1 datasets and place them in datasets folder.
