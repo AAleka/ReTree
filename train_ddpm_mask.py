@@ -208,7 +208,18 @@ def train(args):
 if __name__ == '__main__':
     training = False
     counter = 1
-
+    
+    if not os.path.exists("results"):
+        os.makedirs("results")
+        os.makedirs("results/steps")
+        os.makedirs("results/experiment 7 noise2seg")
+        os.makedirs("results/experiment 7 noise2seg/checkpoints")
+        os.makedirs("results/experiment 7 noise2seg/images")
+        os.makedirs("results/experiment 5 seg2img")
+        os.makedirs("results/experiment 5 seg2img/checkpoints")
+        os.makedirs("results/experiment 5 seg2img/images")
+        os.makedirs("results/experiment 5 seg2img/labels")
+        
     if training:
         parser = argparse.ArgumentParser()
         args = parser.parse_args()
